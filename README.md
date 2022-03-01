@@ -6,7 +6,7 @@ iOS style table view in flutter
 在有默认实现的同时，可以自定义cell、header、footer、分割线，还可以对每个section提供decoration等等。
 同时CupertinoTableView自带上拉/下拉刷新功能，可以通过传递RefreshConfig进行自定义配置。
 
-![屏幕录制2022-03-01 上午10.22.02.2022-03-01 10_37_22](/Users/gavinzzeng/Desktop/屏幕录制2022-03-01 上午10.22.02.2022-03-01 10_37_22.gif)
+![example](example/resource/example.gif)
 
 ```
   /// 创建delegate控制tableView的显示和点击响应等
