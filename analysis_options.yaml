@@ -1,6 +1,6 @@
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
-
+include: package:lints/recommended.yaml
 
 # For lint rules and documentation, see http://dart-lang.github.io/linter/lints.
 # Uncomment to specify additional rules.

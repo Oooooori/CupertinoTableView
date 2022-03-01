@@ -8,6 +8,7 @@ import '../refresh/refresh_controller.dart';
 import '../refresh/refresh_indicator.dart';
 import 'cupertino_table_view_cell.dart';
 
+/// TableView类
 class CupertinoTableView extends StatefulWidget {
   const CupertinoTableView({
     Key? key,
@@ -15,7 +16,6 @@ class CupertinoTableView extends StatefulWidget {
     this.backgroundColor,
     this.padding,
     this.margin,
-    this.pressedOpacity,
     this.physics,
     this.refreshConfig,
     this.scrollController,
@@ -25,7 +25,6 @@ class CupertinoTableView extends StatefulWidget {
   final Color? backgroundColor;
   final EdgeInsets? padding;
   final EdgeInsets? margin;
-  final double? pressedOpacity;
   final ScrollPhysics? physics;
   final RefreshConfig? refreshConfig;
   final ScrollController? scrollController;
@@ -41,9 +40,11 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
   double _headerHeight = 0.0;
   double _footerHeight = 0.0;
 
+  /// 如果外部没有传scrollController，那么会使用_fallbackScrollController
   ScrollController? _fallbackScrollController;
 
-  ScrollController get _effectiveScrollController => widget.scrollController ?? _fallbackScrollController!;
+  ScrollController get _effectiveScrollController =>
+      widget.scrollController ?? _fallbackScrollController!;
 
   @override
   void initState() {
@@ -61,8 +62,11 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     super.dispose();
   }
 
+  /// 是否设置了需要refresh功能
   bool get enableRefresh {
-    return widget.refreshConfig != null && (widget.refreshConfig!.enablePullUp || widget.refreshConfig!.enablePullDown);
+    return widget.refreshConfig != null &&
+        (widget.refreshConfig!.enablePullUp ||
+            widget.refreshConfig!.enablePullDown);
   }
 
   @override
@@ -80,10 +84,15 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     RefreshConfig refreshConfig = widget.refreshConfig!;
     List<Widget> slivers = List.from(list.buildSlivers(context));
     if (refreshConfig.enablePullUp) {
-      slivers.add(SliverToBoxAdapter(child: _buildRefreshFooter(refreshConfig)));
+      slivers.add(
+        SliverToBoxAdapter(child: _buildRefreshFooter(refreshConfig)),
+      );
     }
     if (refreshConfig.enablePullDown) {
-      slivers.insert(0, SliverToBoxAdapter(child: _buildRefreshHeader(refreshConfig)));
+      slivers.insert(
+        0,
+        SliverToBoxAdapter(child: _buildRefreshHeader(refreshConfig)),
+      );
     }
 
     return LayoutBuilder(builder: (context, constraints) {
@@ -114,6 +123,7 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     });
   }
 
+  /// 构建列表
   ListView _buildList() {
     return ListView.builder(
       physics: widget.physics,
@@ -122,23 +132,30 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     );
   }
 
+  /// 构建单个section
   Widget _buildSection(BuildContext context, int section) {
-    int numberOfRowInSection = widget.delegate.numberOfRowsInSection?.call(section) ?? 0;
+    int numberOfRowInSection =
+        widget.delegate.numberOfRowsInSection?.call(section) ?? 0;
     if (numberOfRowInSection == 0) {
       return const SizedBox();
     }
+    Decoration? decoration =
+        widget.delegate.decorationForSection?.call(context, section);
     return Column(
       children: [
         _buildHeaderInSection(context, section),
         Container(
-          clipBehavior: Clip.hardEdge,
+          clipBehavior: decoration == null ? Clip.none : Clip.hardEdge,
           margin: widget.delegate.marginForSection,
-          decoration: widget.delegate.decorationForSection?.call(context, section),
+          decoration: decoration,
           child: ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: numberOfRowInSection,
-            itemBuilder: (context, index) => _buildCell(context, IndexPath(section: section, row: index)),
+            itemBuilder: (context, index) => _buildCell(
+              context,
+              IndexPath(section: section, row: index),
+            ),
             separatorBuilder: (context, index) => _buildDivider(context),
           ),
         ),
@@ -147,22 +164,29 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     );
   }
 
+  /// 构建单个cell
   Widget _buildCell(BuildContext context, IndexPath indexPath) {
     return CupertinoTableViewCell(
-      pressedOpacity: widget.pressedOpacity,
+      pressedOpacity: widget.delegate.pressedOpacity,
       onTap: onTapHandler(indexPath),
-      builder: (context) => widget.delegate.cellForRowAtIndexPath(context, indexPath),
+      builder: (context) =>
+          widget.delegate.cellForRowAtIndexPath(context, indexPath),
     );
   }
 
+  /// 构建section header
   Widget _buildHeaderInSection(BuildContext context, int section) {
-    return widget.delegate.headerInSection?.call(context, section) ?? const SizedBox();
+    return widget.delegate.headerInSection?.call(context, section) ??
+        const SizedBox();
   }
 
+  /// 构建section footer
   Widget _buildFooterInSection(BuildContext context, int section) {
-    return widget.delegate.footerInSection?.call(context, section) ?? const SizedBox();
+    return widget.delegate.footerInSection?.call(context, section) ??
+        const SizedBox();
   }
 
+  /// 构建分割线
   Widget _buildDivider(BuildContext context) {
     return widget.delegate.dividerInTableView?.call(context) ??
         const Divider(
@@ -184,6 +208,8 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     return () => widget.delegate.didSelectRowAtIndexPath?.call(indexPath);
   }
 
+  /// 构建refresh header
+  /// 如果config中的header builder为空，那么没有效果
   Widget _buildRefreshHeader(RefreshConfig config) {
     if (config.refreshHeaderBuilder == null) {
       return const SizedBox();
@@ -196,6 +222,8 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     );
   }
 
+  /// 构建refresh footer
+  /// 如果config中的footer builder为空，那么没有效果
   Widget _buildRefreshFooter(RefreshConfig config) {
     if (config.refreshFooterBuilder == null) {
       return const SizedBox();
@@ -208,12 +236,14 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     );
   }
 
+  /// 初始化ScrollController
   void _initScrollController() {
     if (widget.scrollController == null) {
       _fallbackScrollController = ScrollController();
     }
   }
 
+  /// 销毁ScrollController，在state dispose中调用
   void _disposeScrollController() {
     if (widget.scrollController != null) {
       widget.scrollController!.dispose();
@@ -222,6 +252,7 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     }
   }
 
+  /// 增加listener
   void _addListener() {
     if (widget.refreshConfig == null) {
       return;
@@ -231,6 +262,7 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     controller.addFooterListener(_footerStatusDidChange);
   }
 
+  /// 移除listener，在state dispose中调用
   void _removeListener() {
     if (widget.refreshConfig == null) {
       return;
@@ -240,6 +272,7 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     controller.removeFooterListener(_footerStatusDidChange);
   }
 
+  /// 处理refresh header状态变化
   void _headerStatusDidChange() {
     if (widget.refreshConfig == null) {
       return;
@@ -248,6 +281,7 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     _refreshHeaderStatusDidChange(controller, controller.refreshHeaderStatus);
   }
 
+  /// 处理refresh footer状态变化
   void _footerStatusDidChange() {
     if (widget.refreshConfig == null) {
       return;
@@ -256,7 +290,11 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     _refreshFooterStatusDidChange(controller, controller.refreshFooterStatus);
   }
 
-  void _refreshHeaderStatusDidChange(RefreshController controller, RefreshStatus status) {
+  /// 处理refresh header状态变化
+  void _refreshHeaderStatusDidChange(
+    RefreshController controller,
+    RefreshStatus status,
+  ) {
     widget.refreshConfig!.onRefreshHeaderStatusChange?.call(controller, status);
     switch (status) {
       case RefreshStatus.refreshing:
@@ -272,10 +310,15 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     }
   }
 
-  void _refreshFooterStatusDidChange(RefreshController controller, RefreshStatus status) {
+  /// 处理refresh footer状态变化
+  void _refreshFooterStatusDidChange(
+    RefreshController controller,
+    RefreshStatus status,
+  ) {
     widget.refreshConfig!.onRefreshFooterStatusChange?.call(controller, status);
   }
 
+  /// 计算refresh header和refresh footer的高度
   void _calculateHeight() {
     if (widget.refreshConfig == null) {
       return;
@@ -292,6 +335,7 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     });
   }
 
+  /// 开始滚动的处理
   bool _handleScrollStart(ScrollStartNotification notification) {
     if (widget.refreshConfig == null) {
       return false;
@@ -321,6 +365,7 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     return false;
   }
 
+  /// 滚动中的处理
   bool _handleScrollMoving(ScrollUpdateNotification notification) {
     if (widget.refreshConfig == null) {
       return false;
@@ -347,6 +392,7 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     return false;
   }
 
+  /// 停止滚动的处理
   bool _handleScrollEnd(ScrollNotification notification) {
     if (widget.refreshConfig == null) {
       return false;
@@ -373,6 +419,7 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     return false;
   }
 
+  /// 分发滚动事件
   bool _dispatchScrollEvent(ScrollNotification notification) {
     bool pullUp = notification.metrics.pixels < 0;
     bool pullDown = notification.metrics.pixels > 0;
@@ -400,13 +447,18 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     return false;
   }
 
+  /// 当前列表的offset
   double get currentOffset => _effectiveScrollController.offset;
 
+  /// 跳转到某个offset
   void jumpTo(double offset) {
     _effectiveScrollController.jumpTo(offset);
   }
 
-  Future<void> animateTo(double offset, {required Duration duration, required Curve curve}) {
-    return _effectiveScrollController.animateTo(offset, duration: duration, curve: curve);
+  /// 滚动到某个offset
+  Future<void> animateTo(double offset,
+      {required Duration duration, required Curve curve}) {
+    return _effectiveScrollController.animateTo(offset,
+        duration: duration, curve: curve);
   }
 }

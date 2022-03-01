@@ -3,6 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'refresh_config.dart';
 import 'refresh_controller.dart';
 
+/// 默认的刷新组件
+/// 默认可以显示一张图片和一段文字
+/// 文字和图片左右布局
 class DefaultRefreshIndicator extends StatelessWidget {
   const DefaultRefreshIndicator({
     Key? key,
@@ -53,6 +56,7 @@ class DefaultRefreshIndicator extends StatelessWidget {
   }
 }
 
+/// 内部刷新组件类
 abstract class _RefreshIndicator extends StatefulWidget {
   final RefreshIndicatorBuilder indicatorBuilder;
 
@@ -62,10 +66,13 @@ abstract class _RefreshIndicator extends StatefulWidget {
 
   RefreshStatus get status;
 
+  /// 刷新状态
   set status(RefreshStatus status);
 
+  /// 是否处在刷新中
   bool get isRefreshing => status == RefreshStatus.refreshing;
 
+  /// 是否刷新完成
   bool get isCompleted => status == RefreshStatus.completed;
 
   const _RefreshIndicator({
@@ -76,9 +83,10 @@ abstract class _RefreshIndicator extends StatefulWidget {
   }) : super(key: key);
 }
 
-abstract class _RefreshIndicatorState<T extends _RefreshIndicator> extends State<T>
-    with TickerProviderStateMixin
-    implements DragProcessor {
+/// 内部刷新组件状态，处理下拉/上拉事件，改变自身状态
+/// 根据不同状态改变自身高度，达到显示和隐藏刷新组件的效果
+abstract class _RefreshIndicatorState<T extends _RefreshIndicator>
+    extends State<T> with TickerProviderStateMixin implements DragProcessor {
   late AnimationController _animationController;
 
   @override
@@ -109,7 +117,8 @@ abstract class _RefreshIndicatorState<T extends _RefreshIndicator> extends State
           _animationController.value = 1.0;
           break;
         case RefreshStatus.completed:
-          Future.delayed(Duration(milliseconds: widget.config.completeDuration), _dismiss);
+          Future.delayed(
+              Duration(milliseconds: widget.config.completeDuration), _dismiss);
           break;
         case RefreshStatus.idle:
           break;
@@ -169,6 +178,7 @@ abstract class _RefreshIndicatorState<T extends _RefreshIndicator> extends State
   double _measureOffset(ScrollNotification notification);
 }
 
+/// 刷新header，布局顺序与footer不同
 class RefreshHeader extends _RefreshIndicator {
   const RefreshHeader({
     Key? key,
@@ -191,7 +201,8 @@ class RefreshHeader extends _RefreshIndicator {
   RefreshStatus get status => refreshController.refreshHeaderStatus;
 
   @override
-  set status(RefreshStatus newValue) => refreshController.refreshHeaderStatus = newValue;
+  set status(RefreshStatus newValue) =>
+      refreshController.refreshHeaderStatus = newValue;
 }
 
 class _RefreshHeaderState extends _RefreshIndicatorState<RefreshHeader> {
@@ -215,10 +226,13 @@ class _RefreshHeaderState extends _RefreshIndicatorState<RefreshHeader> {
 
   @override
   double _measureOffset(ScrollNotification notification) {
-    return (notification.metrics.minScrollExtent - notification.metrics.pixels) / widget.config.triggerDistance;
+    return (notification.metrics.minScrollExtent -
+            notification.metrics.pixels) /
+        widget.config.triggerDistance;
   }
 }
 
+/// 刷新footer，布局顺序与header不同
 class RefreshFooter extends _RefreshIndicator {
   const RefreshFooter({
     Key? key,
@@ -241,7 +255,8 @@ class RefreshFooter extends _RefreshIndicator {
   RefreshStatus get status => refreshController.refreshFooterStatus;
 
   @override
-  set status(RefreshStatus newValue) => refreshController.refreshFooterStatus = newValue;
+  set status(RefreshStatus newValue) =>
+      refreshController.refreshFooterStatus = newValue;
 }
 
 class _RefreshFooterState extends _RefreshIndicatorState<RefreshFooter> {
@@ -265,14 +280,20 @@ class _RefreshFooterState extends _RefreshIndicatorState<RefreshFooter> {
 
   @override
   double _measureOffset(ScrollNotification notification) {
-    return (notification.metrics.pixels - notification.metrics.maxScrollExtent) / widget.config.triggerDistance;
+    return (notification.metrics.pixels -
+            notification.metrics.maxScrollExtent) /
+        widget.config.triggerDistance;
   }
 }
 
+/// drag处理接口
 abstract class DragProcessor {
+  /// 开始
   void onDragStart(ScrollStartNotification notification);
 
+  /// 移动
   void onDragMove(ScrollUpdateNotification notification);
 
+  /// 停止
   void onDragEnd(ScrollNotification notification);
 }

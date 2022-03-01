@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+/// tableView下标类
 @immutable
 class IndexPath {
   final int section;
@@ -9,11 +10,10 @@ class IndexPath {
 
   @override
   bool operator ==(Object other) {
-    if (other.runtimeType != IndexPath) {
+    if (other is! IndexPath) {
       return false;
     }
-    IndexPath otherIndexPath = other as IndexPath;
-    return section == otherIndexPath.section && row == otherIndexPath.row;
+    return section == other.section && row == other.row;
   }
 
   @override

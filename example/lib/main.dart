@@ -11,7 +11,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Cupertino Table View Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: Scaffold(appBar: AppBar(title: const Text('CupertinoTableView')), body: CupertinoTableViewDemo()),
+      home: Scaffold(
+          appBar: AppBar(title: const Text('CupertinoTableView')),
+          body: CupertinoTableViewDemo()),
     );
   }
 }
@@ -41,47 +43,51 @@ class _CupertinoTableViewDemoState extends State<CupertinoTableViewDemo> {
     return CupertinoTableView(
       delegate: tableViewDelegate,
       backgroundColor: Colors.black12,
-      margin: EdgeInsets.only(left: 15, right: 15),
       padding: EdgeInsets.only(left: 15, right: 15),
-      pressedOpacity: 0.4,
       refreshConfig: refreshConfig, //如果不想使用刷新能力，refreshConfig可以不传
     );
   }
 
+  /// 创建delegate
   CupertinoTableViewDelegate generateDelegate() {
     return CupertinoTableViewDelegate(
       numberOfSectionsInTableView: () => numberOfSections,
       numberOfRowsInSection: (section) => (section + 1) * 2,
       cellForRowAtIndexPath: (context, indexPath) => Container(
         height: 60,
-        color: indexPath.row.isEven ? Colors.red : Colors.blue,
+        color: Colors.white,
       ),
-      headerInSection: (context, section) => Container(height: 30),
-      footerInSection: (context, section) => Container(height: 30),
+      headerInSection: (context, section) => Container(
+        height: 30,
+        width: double.infinity,
+        alignment: Alignment.centerLeft,
+        child: Text('this is section header'),
+      ),
+      footerInSection: (context, section) => Container(
+        height: 30,
+        width: double.infinity,
+        alignment: Alignment.centerLeft,
+        child: Text('this is section footer'),
+      ),
       decorationForSection: (context, section) => BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black38,
-            blurRadius: 3,
-            spreadRadius: 0.5,
-            offset: Offset(3, 3),
-          ),
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.black38,
+        //     blurRadius: 3,
+        //     spreadRadius: 0.5,
+        //     offset: Offset(3, 3),
+        //   ),
+        // ],
       ),
-      marginForSection: EdgeInsets.only(left: 10, right: 10),
-      dividerInTableView: (context) => Divider(
-        height: 1,
-        thickness: 1,
-        indent: 15,
-        endIndent: 15,
-        color: Colors.black,
-      ),
+      pressedOpacity: 0.4,
       canSelectRowAtIndexPath: (indexPath) => true,
       didSelectRowAtIndexPath: (indexPath) => print('$indexPath'),
+      // marginForSection: marginForSection, // set marginForSection when using boxShadow
     );
   }
 
+  /// 创建refreshConfig
   RefreshConfig generateRefreshConfig() {
     return RefreshConfig(
       refreshHeaderBuilder: (context, status) {
@@ -118,6 +124,8 @@ class _CupertinoTableViewDemoState extends State<CupertinoTableViewDemo> {
       },
     );
   }
+
+  EdgeInsets get marginForSection => const EdgeInsets.only(left: 10, right: 10);
 
   String textFromStatus(RefreshStatus status) {
     switch (status) {

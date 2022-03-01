@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
+/// TableViewCell类
 class CupertinoTableViewCell extends StatefulWidget {
   const CupertinoTableViewCell({
     Key? key,
@@ -18,9 +19,15 @@ class CupertinoTableViewCell extends StatefulWidget {
   State<CupertinoTableViewCell> createState() => _CupertinoTableViewCellState();
 }
 
-class _CupertinoTableViewCellState extends State<CupertinoTableViewCell> with SingleTickerProviderStateMixin {
+class _CupertinoTableViewCellState extends State<CupertinoTableViewCell>
+    with SingleTickerProviderStateMixin {
+  /// pressed动画时长
   static const Duration kFadeOutDuration = Duration(milliseconds: 120);
+
+  /// pressed动画时长
   static const Duration kFadeInDuration = Duration(milliseconds: 180);
+
+  /// pressed动画opacity值
   final Tween<double> _opacityTween = Tween<double>(begin: 1.0);
 
   AnimationController? _animationController;
@@ -40,6 +47,7 @@ class _CupertinoTableViewCellState extends State<CupertinoTableViewCell> with Si
     _setTween();
   }
 
+  /// 初始化动画
   void _setUpAnimation() {
     if (widget.onTap == null) {
       enablePressedAnimation = false;
@@ -57,7 +65,9 @@ class _CupertinoTableViewCellState extends State<CupertinoTableViewCell> with Si
       value: 0.0,
       vsync: this,
     );
-    _opacityAnimation = _animationController?.drive(CurveTween(curve: Curves.decelerate)).drive(_opacityTween);
+    _opacityAnimation = _animationController
+        ?.drive(CurveTween(curve: Curves.decelerate))
+        .drive(_opacityTween);
   }
 
   void _setTween() {
@@ -72,6 +82,9 @@ class _CupertinoTableViewCellState extends State<CupertinoTableViewCell> with Si
 
   @override
   Widget build(BuildContext context) {
+    if (widget.onTap == null) {
+      return widget.builder(context);
+    }
     return GestureDetector(
       behavior: widget.hitBehavior ?? HitTestBehavior.opaque,
       onTap: widget.onTap,
@@ -87,41 +100,49 @@ class _CupertinoTableViewCellState extends State<CupertinoTableViewCell> with Si
     );
   }
 
-  bool _buttonHeldDown = false;
+  /// cell是否被按下去了
+  bool _cellHeldDown = false;
 
+  /// 是否应用pressed动画
   bool enablePressedAnimation = false;
 
+  /// 处理TapDown
   void _handleTapDown(TapDownDetails event) {
-    if (!_buttonHeldDown) {
-      _buttonHeldDown = true;
+    if (!_cellHeldDown) {
+      _cellHeldDown = true;
       _animate();
     }
   }
 
+  /// 处理TapUp
   void _handleTapUp(TapUpDetails event) {
-    if (_buttonHeldDown) {
-      _buttonHeldDown = false;
+    if (_cellHeldDown) {
+      _cellHeldDown = false;
       _animate();
     }
   }
 
+  /// 处理TapCancel
   void _handleTapCancel() {
-    if (_buttonHeldDown) {
-      _buttonHeldDown = false;
+    if (_cellHeldDown) {
+      _cellHeldDown = false;
       _animate();
     }
   }
 
+  /// pressed动画实现
   void _animate() {
     if (_animationController?.isAnimating ?? true) {
       return;
     }
-    final bool wasHeldDown = _buttonHeldDown;
-    final TickerFuture ticker = _buttonHeldDown
-        ? _animationController!.animateTo(1.0, duration: kFadeOutDuration, curve: Curves.easeInOutCubicEmphasized)
-        : _animationController!.animateTo(0.0, duration: kFadeInDuration, curve: Curves.easeOutCubic);
+    final bool wasHeldDown = _cellHeldDown;
+    final TickerFuture ticker = _cellHeldDown
+        ? _animationController!.animateTo(1.0,
+            duration: kFadeOutDuration, curve: Curves.easeInOutCubicEmphasized)
+        : _animationController!.animateTo(0.0,
+            duration: kFadeInDuration, curve: Curves.easeOutCubic);
     ticker.then<void>((void value) {
-      if (mounted && wasHeldDown != _buttonHeldDown) {
+      if (mounted && wasHeldDown != _cellHeldDown) {
         _animate();
       }
     });

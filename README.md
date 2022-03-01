@@ -1,9 +1,12 @@
 # CupertinoTableView
 iOS style table view in flutter
 
-一个iOS风格的TableView Flutter插件
-使用Delegate的方式控制tableView的显示、处理回调等，提供丰富的Delegate配置选项
-同时CupertinoTableView自带上拉/下拉刷新功能，可以通过传递RefreshConfig进行自定义配置
+一个可高度自定义的iOS风格的TableView Flutter插件。
+使用Delegate的方式控制tableView的显示、处理回调等，提供丰富的Delegate配置选项。
+在有默认实现的同时，可以自定义cell、header、footer、分割线，还可以对每个section提供decoration等等。
+同时CupertinoTableView自带上拉/下拉刷新功能，可以通过传递RefreshConfig进行自定义配置。
+
+![屏幕录制2022-03-01 上午10.22.02.2022-03-01 10_37_22](/Users/gavinzzeng/Desktop/屏幕录制2022-03-01 上午10.22.02.2022-03-01 10_37_22.gif)
 
 ```
   /// 创建delegate控制tableView的显示和点击响应等
@@ -13,31 +16,35 @@ iOS style table view in flutter
       numberOfRowsInSection: (section) => (section + 1) * 2,
       cellForRowAtIndexPath: (context, indexPath) => Container(
         height: 60,
-        color: indexPath.row.isEven ? Colors.red : Colors.blue,
+        color: Colors.white,
       ),
-      headerInSection: (context, section) => Container(height: 30),
-      footerInSection: (context, section) => Container(height: 30),
+      headerInSection: (context, section) => Container(
+        height: 30,
+        width: double.infinity,
+        alignment: Alignment.centerLeft,
+        child: Text('this is section header'),
+      ),
+      footerInSection: (context, section) => Container(
+        height: 30,
+        width: double.infinity,
+        alignment: Alignment.centerLeft,
+        child: Text('this is section footer'),
+      ),
       decorationForSection: (context, section) => BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black38,
-            blurRadius: 3,
-            spreadRadius: 0.5,
-            offset: Offset(3, 3),
-          ),
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.black38,
+        //     blurRadius: 3,
+        //     spreadRadius: 0.5,
+        //     offset: Offset(3, 3),
+        //   ),
+        // ],
       ),
-      marginForSection: EdgeInsets.only(left: 10, right: 10),
-      dividerInTableView: (context) => Divider(
-        height: 1,
-        thickness: 1,
-        indent: 15,
-        endIndent: 15,
-        color: Colors.black,
-      ),
+      pressedOpacity: 0.4,
       canSelectRowAtIndexPath: (indexPath) => true,
       didSelectRowAtIndexPath: (indexPath) => print('$indexPath'),
+      // marginForSection: marginForSection, // set marginForSection when using boxShadow
     );
   }
   
@@ -84,10 +91,8 @@ iOS style table view in flutter
     return CupertinoTableView(
       delegate: tableViewDelegate,
       backgroundColor: Colors.black12,
-      margin: EdgeInsets.only(left: 15, right: 15),
       padding: EdgeInsets.only(left: 15, right: 15),
-      pressedOpacity: 0.4,
-      refreshConfig: refreshConfig,
+      refreshConfig: refreshConfig, //如果不想使用刷新能力，refreshConfig可以不传
     );
   }
 
