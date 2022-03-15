@@ -1,8 +1,5 @@
 name: cupertino_table_view
-description: 一个可高度自定义的iOS风格的TableView Flutter插件。
-  使用Delegate的方式控制tableView的显示、处理回调等，提供丰富的Delegate配置选项。
-  在有默认实现的同时，可以自定义cell、header、footer、分割线，还可以对每个section提供decoration等等。
-  同时CupertinoTableView自带上拉/下拉刷新功能，可以通过传递RefreshConfig进行自定义配置。
+description: 一个可高度自定义的iOS风格的TableView Flutter插件。直接Delegate配置和自带可配置的下拉刷新功能。
 version: 1.0.1
 homepage: https://github.com/Oooooori/CupertinoTableView
 
