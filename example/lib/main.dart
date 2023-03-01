@@ -27,7 +27,7 @@ class _CupertinoTableViewDemoState extends State<CupertinoTableViewDemo> {
   late CupertinoTableViewDelegate tableViewDelegate;
   late RefreshConfig refreshConfig;
 
-  int numberOfSections = 3;
+  int numberOfSections = 5;
 
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _CupertinoTableViewDemoState extends State<CupertinoTableViewDemo> {
   CupertinoTableViewDelegate generateDelegate() {
     return CupertinoTableViewDelegate(
       numberOfSectionsInTableView: () => numberOfSections,
-      numberOfRowsInSection: (section) => (section + 1) * 2,
+      numberOfRowsInSection: (section) => section.isOdd ? 1 : section,
       cellForRowAtIndexPath: (context, indexPath) => Container(
         height: 60,
         color: Colors.white,
@@ -105,7 +105,7 @@ class _CupertinoTableViewDemoState extends State<CupertinoTableViewDemo> {
           Future.delayed(Duration(seconds: 3), () {
             controller.refreshHeaderStatus = RefreshStatus.completed;
             setState(() {
-              numberOfSections = 3;
+              numberOfSections = 10;
             });
           });
         }
@@ -115,7 +115,7 @@ class _CupertinoTableViewDemoState extends State<CupertinoTableViewDemo> {
           Future.delayed(Duration(seconds: 3), () {
             controller.refreshFooterStatus = RefreshStatus.completed;
             setState(() {
-              numberOfSections = 5;
+              numberOfSections = 15;
             });
           });
         }

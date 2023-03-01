@@ -140,6 +140,7 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
       return const SizedBox.shrink();
     }
     BoxDecoration? decoration = widget.delegate.decorationForSection?.call(context, section);
+    bool singleRowSection = numberOfRowInSection == 1;
     return Column(
       children: [
         _buildHeaderInSection(context, section),
@@ -147,16 +148,18 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
           clipBehavior: decoration == null ? Clip.none : Clip.hardEdge,
           margin: widget.delegate.marginForSection,
           decoration: decoration,
-          child: ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: numberOfRowInSection,
-            itemBuilder: (context, index) => _buildCell(
-              context,
-              IndexPath(section: section, row: index),
-            ),
-            separatorBuilder: (context, index) => _buildDivider(context),
-          ),
+          child: singleRowSection
+              ? _buildCell(context, IndexPath(section: section, row: 0))
+              : ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: numberOfRowInSection,
+                  itemBuilder: (context, index) => _buildCell(
+                    context,
+                    IndexPath(section: section, row: index),
+                  ),
+                  separatorBuilder: (context, index) => _buildDivider(context),
+                ),
         ),
         _buildFooterInSection(context, section),
       ],
