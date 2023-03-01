@@ -4,17 +4,15 @@
 
 ## 1.0.1
 
-* 代码优化
+* Fix some issues
 
-1. 调整设置pressedOpacity的方法，现在放到delegate中设置
-2. 去掉多余的依赖库
-3. 以来dart版本降级，现在最低支持dart2.12
-4. 补充部分注释和readme
-5. 修复当不设置section decoration时的异常
+1. Downgraded dart version to 2.12
+2. Fix issues when setting section decoration
 
 ## 1.0.2
 
-* 修复bug
+* fix some issues
 
-1. 修复当没有mounted的时候收到PostFrameCallback时发生的异常，可能在pageView中会遇到这种情况
-2. physics默认设置为const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics())
+1. Fix the exception that occurs when the PostFrameCallback is received without mounted, which may
+   be encountered in pageView
+2. Set physics = const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()) by default
