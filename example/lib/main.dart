@@ -11,9 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Cupertino Table View Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: Scaffold(
-          appBar: AppBar(title: const Text('CupertinoTableView')),
-          body: CupertinoTableViewDemo()),
+      home: Scaffold(appBar: AppBar(title: const Text('CupertinoTableView')), body: CupertinoTableViewDemo()),
     );
   }
 }

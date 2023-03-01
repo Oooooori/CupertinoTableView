@@ -12,7 +12,7 @@ typedef WidgetInSection = Widget? Function(
   BuildContext context,
   int section,
 );
-typedef DecorationForSection = Decoration? Function(
+typedef DecorationForSection = BoxDecoration? Function(
   BuildContext context,
   int section,
 );
