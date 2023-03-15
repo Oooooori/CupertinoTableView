@@ -58,9 +58,14 @@ class RefreshIndicatorConfig {
   /// 可见范围
   final double visibleRange;
 
+  /// indicator高度，对于不定高度定indicator，可以不传
+  /// 如果已经可以在build之前确定indicator高度，那么就不需要tableView内部自己再去计算高度，可以省略一次setState重新构建的步骤
+  final double? indicatorHeight;
+
   const RefreshIndicatorConfig({
     this.visibleRange = 50,
     this.completeDuration = 300,
     this.triggerDistance = 100,
+    this.indicatorHeight,
   });
 }

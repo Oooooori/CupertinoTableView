@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'refresh_config.dart';
 import 'refresh_controller.dart';
 
+const double defaultIndicatorHeight = 60.0;
+
 /// 默认的刷新组件
 /// 默认可以显示一张图片和一段文字
 /// 文字和图片左右布局
@@ -12,7 +14,7 @@ class DefaultRefreshIndicator extends StatelessWidget {
     this.text,
     this.textStyle = const TextStyle(color: Color(0xff555555)),
     this.icon,
-    this.height = 60.0,
+    this.height = defaultIndicatorHeight,
   }) : super(key: key);
 
   final String? text;

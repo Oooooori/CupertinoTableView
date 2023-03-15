@@ -16,3 +16,8 @@
 1. Fix the exception that occurs when the PostFrameCallback is received without mounted, which may
    be encountered in pageView
 2. Set physics = const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()) by default
+
+## 1.0.3
+
+* support setting indicatorHeight in RefreshIndicatorConfig
+

@@ -1,6 +1,6 @@
 name: cupertino_table_view
 description: A highly customizable iOS-style TableView. Support configuration and pull-down refresh.
-version: 1.0.2
+version: 1.0.3
 homepage: https://github.com/Oooooori/CupertinoTableView
 
 environment:
