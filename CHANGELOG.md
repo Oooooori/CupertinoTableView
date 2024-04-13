@@ -21,3 +21,6 @@
 
 * support setting indicatorHeight in RefreshIndicatorConfig
 
+## 1.0.4
+
+* add disposed status in RefreshConfig

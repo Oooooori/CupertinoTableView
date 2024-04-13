@@ -11,16 +11,15 @@ import 'cupertino_table_view_cell.dart';
 /// TableView类
 class CupertinoTableView extends StatefulWidget {
   const CupertinoTableView({
-    Key? key,
+    super.key,
     required this.delegate,
     this.backgroundColor,
     this.padding,
     this.margin,
-    this.physics =
-        const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+    this.physics = const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
     this.refreshConfig,
     this.scrollController,
-  }) : super(key: key);
+  });
 
   final CupertinoTableViewDelegate delegate;
   final Color? backgroundColor;
@@ -44,8 +43,7 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
   /// 如果外部没有传scrollController，那么会使用_fallbackScrollController
   ScrollController? _fallbackScrollController;
 
-  ScrollController get _effectiveScrollController =>
-      widget.scrollController ?? _fallbackScrollController!;
+  ScrollController get _effectiveScrollController => widget.scrollController ?? _fallbackScrollController!;
 
   @override
   void initState() {
@@ -59,7 +57,8 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
   void dispose() {
     _removeListener();
     _disposeScrollController();
-    widget.refreshConfig?.controller.dispose();
+
+    widget.refreshConfig?.dispose();
     super.dispose();
   }
 
@@ -137,13 +136,11 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
 
   /// 构建单个section
   Widget _buildSection(BuildContext context, int section) {
-    int numberOfRowInSection =
-        widget.delegate.numberOfRowsInSection?.call(section) ?? 0;
+    int numberOfRowInSection = widget.delegate.numberOfRowsInSection?.call(section) ?? 0;
     if (numberOfRowInSection == 0) {
       return const SizedBox.shrink();
     }
-    BoxDecoration? decoration =
-        widget.delegate.decorationForSection?.call(context, section);
+    BoxDecoration? decoration = widget.delegate.decorationForSection?.call(context, section);
     bool singleRowSection = numberOfRowInSection == 1;
     return Column(
       children: [
@@ -175,21 +172,18 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     return CupertinoTableViewCell(
       pressedOpacity: widget.delegate.pressedOpacity,
       onTap: onTapHandler(indexPath),
-      builder: (context) =>
-          widget.delegate.cellForRowAtIndexPath(context, indexPath),
+      builder: (context) => widget.delegate.cellForRowAtIndexPath(context, indexPath),
     );
   }
 
   /// 构建section header
   Widget _buildHeaderInSection(BuildContext context, int section) {
-    return widget.delegate.headerInSection?.call(context, section) ??
-        const SizedBox.shrink();
+    return widget.delegate.headerInSection?.call(context, section) ?? const SizedBox.shrink();
   }
 
   /// 构建section footer
   Widget _buildFooterInSection(BuildContext context, int section) {
-    return widget.delegate.footerInSection?.call(context, section) ??
-        const SizedBox.shrink();
+    return widget.delegate.footerInSection?.call(context, section) ?? const SizedBox.shrink();
   }
 
   /// 构建分割线
@@ -482,9 +476,7 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
   }
 
   /// 滚动到某个offset
-  Future<void> animateTo(double offset,
-      {required Duration duration, required Curve curve}) {
-    return _effectiveScrollController.animateTo(offset,
-        duration: duration, curve: curve);
+  Future<void> animateTo(double offset, {required Duration duration, required Curve curve}) {
+    return _effectiveScrollController.animateTo(offset, duration: duration, curve: curve);
   }
 }

@@ -10,12 +10,12 @@ const double defaultIndicatorHeight = 60.0;
 /// 文字和图片左右布局
 class DefaultRefreshIndicator extends StatelessWidget {
   const DefaultRefreshIndicator({
-    Key? key,
+    super.key,
     this.text,
     this.textStyle = const TextStyle(color: Color(0xff555555)),
     this.icon,
     this.height = defaultIndicatorHeight,
-  }) : super(key: key);
+  });
 
   final String? text;
 
@@ -78,17 +78,18 @@ abstract class _RefreshIndicator extends StatefulWidget {
   bool get isCompleted => status == RefreshStatus.completed;
 
   const _RefreshIndicator({
-    Key? key,
+    super.key,
     required this.refreshController,
     required this.indicatorBuilder,
     required this.config,
-  }) : super(key: key);
+  });
 }
 
 /// 内部刷新组件状态，处理下拉/上拉事件，改变自身状态
 /// 根据不同状态改变自身高度，达到显示和隐藏刷新组件的效果
-abstract class _RefreshIndicatorState<T extends _RefreshIndicator>
-    extends State<T> with TickerProviderStateMixin implements DragProcessor {
+abstract class _RefreshIndicatorState<T extends _RefreshIndicator> extends State<T>
+    with TickerProviderStateMixin
+    implements DragProcessor {
   late AnimationController _animationController;
 
   @override
@@ -183,16 +184,11 @@ abstract class _RefreshIndicatorState<T extends _RefreshIndicator>
 /// 刷新header，布局顺序与footer不同
 class RefreshHeader extends _RefreshIndicator {
   const RefreshHeader({
-    Key? key,
-    required RefreshController refreshController,
-    required RefreshIndicatorBuilder indicatorBuilder,
-    required RefreshIndicatorConfig config,
-  }) : super(
-          key: key,
-          config: config,
-          refreshController: refreshController,
-          indicatorBuilder: indicatorBuilder,
-        );
+    super.key,
+    required super.refreshController,
+    required super.indicatorBuilder,
+    required super.config,
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -229,7 +225,7 @@ class _RefreshHeaderState extends _RefreshIndicatorState<RefreshHeader> {
   @override
   double _measureOffset(ScrollNotification notification) {
     return (notification.metrics.minScrollExtent -
-            notification.metrics.pixels) /
+        notification.metrics.pixels) /
         widget.config.triggerDistance;
   }
 }
@@ -237,16 +233,11 @@ class _RefreshHeaderState extends _RefreshIndicatorState<RefreshHeader> {
 /// 刷新footer，布局顺序与header不同
 class RefreshFooter extends _RefreshIndicator {
   const RefreshFooter({
-    Key? key,
-    required RefreshController refreshController,
-    required RefreshIndicatorBuilder indicatorBuilder,
-    required RefreshIndicatorConfig config,
-  }) : super(
-          key: key,
-          config: config,
-          refreshController: refreshController,
-          indicatorBuilder: indicatorBuilder,
-        );
+    super.key,
+    required super.refreshController,
+    required super.indicatorBuilder,
+    required super.config,
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -283,7 +274,7 @@ class _RefreshFooterState extends _RefreshIndicatorState<RefreshFooter> {
   @override
   double _measureOffset(ScrollNotification notification) {
     return (notification.metrics.pixels -
-            notification.metrics.maxScrollExtent) /
+        notification.metrics.maxScrollExtent) /
         widget.config.triggerDistance;
   }
 }

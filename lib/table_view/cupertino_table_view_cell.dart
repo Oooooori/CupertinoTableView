@@ -3,12 +3,12 @@ import 'package:flutter/cupertino.dart';
 /// TableViewCell类
 class CupertinoTableViewCell extends StatefulWidget {
   const CupertinoTableViewCell({
-    Key? key,
+    super.key,
     required this.builder,
     this.pressedOpacity,
     this.hitBehavior,
     this.onTap,
-  }) : super(key: key);
+  });
 
   final double? pressedOpacity;
   final WidgetBuilder builder;
@@ -19,8 +19,7 @@ class CupertinoTableViewCell extends StatefulWidget {
   State<CupertinoTableViewCell> createState() => _CupertinoTableViewCellState();
 }
 
-class _CupertinoTableViewCellState extends State<CupertinoTableViewCell>
-    with SingleTickerProviderStateMixin {
+class _CupertinoTableViewCellState extends State<CupertinoTableViewCell> with SingleTickerProviderStateMixin {
   /// pressed动画时长
   static const Duration kFadeOutDuration = Duration(milliseconds: 120);
 
@@ -65,9 +64,7 @@ class _CupertinoTableViewCellState extends State<CupertinoTableViewCell>
       value: 0.0,
       vsync: this,
     );
-    _opacityAnimation = _animationController
-        ?.drive(CurveTween(curve: Curves.decelerate))
-        .drive(_opacityTween);
+    _opacityAnimation = _animationController?.drive(CurveTween(curve: Curves.decelerate)).drive(_opacityTween);
   }
 
   void _setTween() {
@@ -137,10 +134,8 @@ class _CupertinoTableViewCellState extends State<CupertinoTableViewCell>
     }
     final bool wasHeldDown = _cellHeldDown;
     final TickerFuture ticker = _cellHeldDown
-        ? _animationController!.animateTo(1.0,
-            duration: kFadeOutDuration, curve: Curves.easeInOutCubicEmphasized)
-        : _animationController!.animateTo(0.0,
-            duration: kFadeInDuration, curve: Curves.easeOutCubic);
+        ? _animationController!.animateTo(1.0, duration: kFadeOutDuration, curve: Curves.easeInOutCubicEmphasized)
+        : _animationController!.animateTo(0.0, duration: kFadeInDuration, curve: Curves.easeOutCubic);
     ticker.then<void>((void value) {
       if (mounted && wasHeldDown != _cellHeldDown) {
         _animate();

@@ -12,15 +12,15 @@ enum RefreshStatus {
 
 /// 刷新组件创建
 typedef RefreshIndicatorBuilder = Widget Function(
-  BuildContext context,
-  RefreshStatus status,
-);
+    BuildContext context,
+    RefreshStatus status,
+    );
 
 /// 刷新状态回调
 typedef RefreshStatusDidChange = void Function(
-  RefreshController controller,
-  RefreshStatus status,
-);
+    RefreshController controller,
+    RefreshStatus status,
+    );
 
 /// tableView刷新控制类
 class RefreshConfig {
@@ -45,6 +45,13 @@ class RefreshConfig {
     this.onRefreshFooterStatusChange,
     RefreshController? controller,
   }) : controller = controller ?? RefreshController();
+
+  bool disposed = false;
+
+  void dispose() {
+    controller.dispose();
+    disposed = true;
+  }
 }
 
 /// 刷新组件配置
