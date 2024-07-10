@@ -360,7 +360,8 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
     if (widget.refreshConfig == null) {
       return false;
     }
-    if ((notification.metrics.outOfRange)) {
+
+    if (notification.metrics.outOfRange) {
       return false;
     }
 
@@ -441,6 +442,10 @@ class _CupertinoTableViewState extends State<CupertinoTableView> {
 
   /// 分发滚动事件
   bool _dispatchScrollEvent(ScrollNotification notification) {
+    if (notification.metrics.axis == Axis.horizontal) {
+      return false;
+    }
+
     bool pullUp = notification.metrics.pixels < 0;
     bool pullDown = notification.metrics.pixels > 0;
     if (!pullUp && !pullDown) {
